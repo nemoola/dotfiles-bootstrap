@@ -18,7 +18,7 @@ if [ "${1:-}" = "--continue" ]; then
       read -r _
 
       if ! ssh-add -L >/dev/null 2>&1; then
-        printf "%s\n" "SSH agent に鍵が見えていません。Bitwarden の SSH Agent と鍵を確認してください。"
+        printf "%s\n" "SSH Agentに鍵が見えていません。BitwardenのSSH Agentと鍵を確認してください。"
         ssh-add -L || true
         exit 1
       fi
