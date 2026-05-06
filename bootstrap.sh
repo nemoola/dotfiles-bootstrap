@@ -8,7 +8,6 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
 
-NIX_CONFIG='experimental-features = nix-command flakes' \
 nix shell \
   nixpkgs#git \
   nixpkgs#chezmoi \
