@@ -2,10 +2,12 @@
 
 set -e
 
-CONTINUE_COMMAND=$(cat <<'EOF'
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
 
-NIX_CONFIG='experimental-features = nix-command flakes' \
 nix shell \
   nixpkgs#git \
   nixpkgs#chezmoi \
@@ -26,25 +28,3 @@ nix shell \
     ssh -T git@github.com || true
     chezmoi init git@github.com:nemoola/dotfiles.git
   '
-EOF
-)
-
-if [ "${1:-}" = "--continue" ]; then
-  eval "$CONTINUE_COMMAND"
-  exit 0
-fi
-
-case "$(uname -s)" in
-  Darwin)
-    curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh
-    ;;
-  Linux)
-    curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --daemon
-    ;;
-  *)
-    printf 'unsupported OS: %s\n' "$(uname -s)" >&2
-    exit 1
-    ;;
-esac
-
-exec "$SHELL" -lc "$CONTINUE_COMMAND"
